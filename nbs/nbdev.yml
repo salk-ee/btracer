@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "btracer"
+  site-url: "https://salk-ee.github.io/btracer"
+  description: "Trace explorer for Bayesian models"
+  repo-branch: main
+  repo-url: "https://github.com/salk-ee/btracer"
