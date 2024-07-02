@@ -5,4 +5,12 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://salk-ee.github.io',
                 'git_url': 'https://github.com/salk-ee/btracer',
                 'lib_path': 'btracer'},
-  'syms': {'btracer.core': {'btracer.core.foo': ('core.html#foo', 'btracer/core.py')}}}
+  'syms': { 'btracer.plots': { 'btracer.plots.chart_selection_vars': ('plots.html#chart_selection_vars', 'btracer/plots.py'),
+                               'btracer.plots.legend_selection_vars': ('plots.html#legend_selection_vars', 'btracer/plots.py'),
+                               'btracer.plots.limit_traces': ('plots.html#limit_traces', 'btracer/plots.py'),
+                               'btracer.plots.plot_density': ('plots.html#plot_density', 'btracer/plots.py'),
+                               'btracer.plots.plot_diagnostics': ('plots.html#plot_diagnostics', 'btracer/plots.py'),
+                               'btracer.plots.plot_rank': ('plots.html#plot_rank', 'btracer/plots.py'),
+                               'btracer.plots.transform_density': ('plots.html#transform_density', 'btracer/plots.py'),
+                               'btracer.plots.transform_rank': ('plots.html#transform_rank', 'btracer/plots.py'),
+                               'btracer.plots.transform_stats': ('plots.html#transform_stats', 'btracer/plots.py')}}}
