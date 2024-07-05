@@ -58,8 +58,41 @@ def plot_diagnostics(idata):
 
     return btracer.plot_diagnostics(idata, var_names=selected_var_names, properties=plot_properties)
 
+def plot_summary(idata):
+    var_names = list(idata.posterior.data_vars)
+    plot_properties = {'width': get_width()}
+
+    agg_func_name = st.sidebar.selectbox('Aggregation function:', btracer.SUMMARY_FUNCTIONS.keys())
+    selected_var_name = st.sidebar.selectbox('Variable:', var_names, index=None)
+
+    if not selected_var_name:
+        st.markdown("""Please choose a variable from the sidebar""")
+        st.stop()
+
+    var_dims = list(idata.posterior[selected_var_name].dims)
+    base_dims = st.sidebar.multiselect('Base dimensions:', var_dims, default=[dim for dim in var_dims if dim in ['chain', 'draw']])
+
+    other_dims = [dim for dim in var_dims if not dim in base_dims]
+
+    selected_dim1 = st.sidebar.selectbox('Dimension 1 (horizontal):', other_dims)
+    selected_dim2 = st.sidebar.selectbox('Dimension 2 (vertical):', [dim for dim in other_dims if dim != selected_dim1])
+
+    if not selected_dim1 or not selected_dim2:
+        st.markdown("""Please choose dimensions from the sidebar or another variable if no dimensions are available""")
+        st.stop()
+
+    return btracer.plot_summary(
+        idata.posterior[selected_var_name],
+        selected_dim1,
+        selected_dim2,
+        agg_func_name=agg_func_name,
+        base_dims=base_dims,
+        properties=plot_properties
+    )
+
 plot_types = {
     'diagnostics': plot_diagnostics,
+    'summary': plot_summary,
 }
 
 ########################################################################
