@@ -90,9 +90,49 @@ def plot_summary(idata):
         properties=plot_properties
     )
 
+def plot_correlation(idata):
+    var_names = list(idata.posterior.data_vars)
+    plot_properties = {'width': get_width()}
+
+    agg_func_name = st.sidebar.selectbox('Aggregation function:', btracer.CORRELATION_FUNCTIONS.keys())
+    selected_var_name1 = st.sidebar.selectbox('Variable 1 (horizontal):', var_names, index=None)
+    selected_var_name2 = st.sidebar.selectbox('Variable 2 (vertical):', var_names, index=None)
+
+    if not selected_var_name1 or not selected_var_name2:
+        st.markdown("""Please choose variables from the sidebar""")
+        st.stop()
+
+    var_dims1 = list(idata.posterior[selected_var_name1].dims)
+    var_dims2 = list(idata.posterior[selected_var_name2].dims)
+
+    shared_dims = [dim for dim in var_dims1 if dim in var_dims2]
+
+    base_dims = st.sidebar.multiselect('Base dimensions:', shared_dims, default=[dim for dim in ['chain', 'draw'] if dim in shared_dims])
+
+    other_dims1 = [dim for dim in var_dims1 if not dim in base_dims]
+    other_dims2 = [dim for dim in var_dims2 if not dim in base_dims]
+
+    selected_dim1 = st.sidebar.selectbox('Dimension 1 (horizontal):', other_dims1)
+    selected_dim2 = st.sidebar.selectbox('Dimension 2 (vertical):', other_dims2)
+
+    if not selected_dim1 or not selected_dim2:
+        st.markdown("""Please choose dimensions from the sidebar or another variable if no dimensions are available""")
+        st.stop()
+
+    return btracer.plot_correlation(
+        idata.posterior[selected_var_name1],
+        idata.posterior[selected_var_name2],
+        selected_dim1,
+        selected_dim2,
+        agg_func_name=agg_func_name,
+        base_dims=base_dims,
+        properties=plot_properties
+    )
+
 plot_types = {
     'diagnostics': plot_diagnostics,
     'summary': plot_summary,
+    'correlation': plot_correlation,
 }
 
 ########################################################################
