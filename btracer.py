@@ -35,6 +35,9 @@ with st.spinner("Loading libraries.."):
     import xarray as xr
     import btracer
 
+    # Make it load the nc eagerly, so it would not leave the file open on disk
+    az.rcParams["data.load"] = 'eager'
+
     # Disable altair schema validations by setting debug_mode = False
     # This speeds plots up considerably as altair performs an excessive amount of these validation for some reason
     dm = alt.utils.schemapi.debug_mode(False); dm.__enter__()
@@ -51,7 +54,7 @@ warnings.filterwarnings(action='ignore', category=pd.errors.PerformanceWarning)
 
 def plot_diagnostics(idata):
     var_names = list(idata.posterior.data_vars)
-    selected_var_names = st.sidebar.multiselect('Variables:', var_names, default=var_names[:10])
+    selected_var_names = st.sidebar.multiselect('Variables:', var_names, default=[]) #var_names[:10])
 
     width = get_width()
     plot_properties = {'height': width / 4, 'width': width / 2}
