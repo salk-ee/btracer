@@ -163,7 +163,8 @@ if not input_file_choices:
     st.markdown("""No input files found. Please specify one or more paths with model trace files when executing `streamlit run btracer.py <path>`.""")
     st.stop()
 
-input_file_name = st.sidebar.selectbox('Input file:', input_file_choices.keys(), index=None)
+default_file = None if len(input_file_choices)>1 else 0
+input_file_name = st.sidebar.selectbox('Input file:', input_file_choices.keys(), index=default_file)
 
 @st.cache_resource(show_spinner=False)
 def load_idata_file(input_file):
