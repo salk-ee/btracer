@@ -1,0 +1,52 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "btracer",
+    "section": "",
+    "text": "pip install btracer",
+    "crumbs": [
+      "btracer"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "btracer",
+    "section": "",
+    "text": "pip install btracer",
+    "crumbs": [
+      "btracer"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "btracer",
+    "section": "How to use",
+    "text": "How to use\nimport arviz as az\nimport btracer\n\nidata = az.from_netcdf('./traces/trace.nc')\nbtracer.plot_diagnostics(idata)\nor\nstreamlit run btracer.py traces/",
+    "crumbs": [
+      "btracer"
+    ]
+  },
+  {
+    "objectID": "index.html#local-dev",
+    "href": "index.html#local-dev",
+    "title": "btracer",
+    "section": "Local dev",
+    "text": "Local dev\npip install -e .\nnbdev_export",
+    "crumbs": [
+      "btracer"
+    ]
+  },
+  {
+    "objectID": "plots.html",
+    "href": "plots.html",
+    "title": "plots",
+    "section": "",
+    "text": "source\n\nplot_correlation\n\n plot_correlation (data_var1, data_var2, dim1, dim2, base_dims=None,\n                   agg_func_name=None, agg_func=None, properties={},\n                   **kwargs)\n\n\nsource\n\n\nplot_summary\n\n plot_summary (data_var, dim1, dim2, agg_func_name=None, agg_func=None,\n               base_dims=None, properties={}, **kwargs)\n\n\nsource\n\n\nplot_diagnostics\n\n plot_diagnostics (idata, var_names=None, **kwargs)\n\n\nsource\n\n\nplot_rank\n\n plot_rank (data_var, legend=None, chart_selection=None,\n            legend_selection=None, properties={}, **kwargs)\n\n\nsource\n\n\nplot_density\n\n plot_density (data_var, legend=None, chart_selection=None,\n               legend_selection=None, properties={}, **kwargs)",
+    "crumbs": [
+      "plots"
+    ]
+  }
+]
