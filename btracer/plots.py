@@ -114,21 +114,21 @@ def limit_traces(data_var, category_limit=50, **_kwargs):
 def transform_density(data_var, num_density_points=50, **_kwargs):
     # https://docs.xarray.dev/en/stable/examples/apply_ufunc_vectorize_1d.html
     def gaussian_kde(data):
-        if np.min(data)==np.max(data): return (np.zeros(num_density_points), np.zeros(num_density_points))
+        if np.min(data)==np.max(data):return np.zeros(num_density_points), np.ones(num_density_points)*np.min(data)
         x_pts = np.linspace(np.min(data), np.max(data), num_density_points)
         gkde = scipy.stats.gaussian_kde(data)
         return gkde.evaluate(x_pts) / 100., x_pts
 
     density_data, x_pts_data = xr.apply_ufunc(
         gaussian_kde,
-        data_var.fillna(0.0),
+        data_var.fillna(data_var.mean()),
         input_core_dims=[['draw']],
         output_core_dims=[['_n'], ['_n']],
         exclude_dims=set(('draw',)),
         vectorize=True,
     )
 
-    transformed_data = xr.merge([density_data.rename('density'), x_pts_data.rename(data_var.name)])
+    transformed_data = xr.merge([density_data.dropna('_n').rename('density'), x_pts_data.dropna('_n').rename(data_var.name)])
     return transformed_data.to_dataframe().reset_index(['_n'], drop=True)
 
 def transform_stats(data_var, **_kwargs):
