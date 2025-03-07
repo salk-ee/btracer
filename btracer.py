@@ -84,8 +84,11 @@ def plot_summary(idata):
         st.markdown("""Please choose dimensions from the sidebar or another variable if no dimensions are available""")
         st.stop()
 
+    chains = list(idata.posterior['chain'].values)
+    chains = st.sidebar.multiselect('Chains:', chains, default=chains)
+
     return btracer.plot_summary(
-        idata.posterior[selected_var_name],
+        idata.sel(chain=chains).posterior[selected_var_name],
         selected_dim1,
         selected_dim2,
         agg_func_name=agg_func_name,
