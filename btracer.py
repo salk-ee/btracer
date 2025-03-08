@@ -192,7 +192,7 @@ else:
     plot = plot_types[plot_type](idata)
 
 if plot is not None:
-    st.altair_chart(plot)
+    st.altair_chart(plot,use_container_width=False)
 
 info.empty()
 
