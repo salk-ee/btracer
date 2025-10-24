@@ -4,7 +4,7 @@
 
 # %% auto 0
 __all__ = ['SUMMARY_FUNCTIONS', 'CORRELATION_FUNCTIONS', 'plot_density', 'plot_rank', 'plot_diagnostics', 'plot_summary',
-           'plot_correlation']
+           'plot_correlation', 'run_btracer']
 
 # %% ../nbs/00_plots.ipynb 3
 import altair as alt
@@ -438,3 +438,9 @@ def plot_correlation(data_var1, data_var2, dim1, dim2, base_dims=None, agg_func_
     chart_df = agg_data.to_dataframe(name=agg_func_name).reset_index()
 
     return _plot_heatmap(chart_df, dim1, dim2, base_dims, agg_func_name, properties, **kwargs)
+
+# %% ../nbs/00_plots.ipynb 8
+def run_btracer():
+    import subprocess, sys, os
+    filename = os.path.join(os.path.dirname(__file__),'btracer.py')
+    subprocess.run(['streamlit', 'run', filename]+sys.argv[1:])

@@ -14,6 +14,7 @@ d = { 'settings': { 'branch': 'main',
                                'btracer.plots.plot_diagnostics': ('plots.html#plot_diagnostics', 'btracer/plots.py'),
                                'btracer.plots.plot_rank': ('plots.html#plot_rank', 'btracer/plots.py'),
                                'btracer.plots.plot_summary': ('plots.html#plot_summary', 'btracer/plots.py'),
+                               'btracer.plots.run_btracer': ('plots.html#run_btracer', 'btracer/plots.py'),
                                'btracer.plots.transform_density': ('plots.html#transform_density', 'btracer/plots.py'),
                                'btracer.plots.transform_rank': ('plots.html#transform_rank', 'btracer/plots.py'),
                                'btracer.plots.transform_stats': ('plots.html#transform_stats', 'btracer/plots.py')}}}
