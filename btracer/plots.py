@@ -4,7 +4,7 @@
 
 # %% auto 0
 __all__ = ['SUMMARY_FUNCTIONS', 'CORRELATION_FUNCTIONS', 'plot_density', 'plot_rank', 'plot_diagnostics', 'plot_summary',
-           'plot_correlation', 'run_btracer']
+           'plot_correlation', 'plot_sampling', 'run_btracer']
 
 # %% ../nbs/00_plots.ipynb 3
 import altair as alt
@@ -439,8 +439,60 @@ def plot_correlation(data_var1, data_var2, dim1, dim2, base_dims=None, agg_func_
 
     return _plot_heatmap(chart_df, dim1, dim2, base_dims, agg_func_name, properties, **kwargs)
 
+
+def plot_sampling(idata, properties={}, discard_warmup=False, y_zero=True, **kwargs):
+    """Plot energy and lp from sample_stats (and warmup_sample_stats if present) as line charts."""
+    warmup = getattr(idata, 'warmup_sample_stats', None)
+    sample_stats = idata.sample_stats
+
+    if warmup is not None and len(warmup.data_vars) > 0 and not discard_warmup:
+        warmup_draws = warmup.sizes['draw']
+        stats = xr.concat([warmup, sample_stats], dim='draw')
+        stats = stats.assign_coords(draw=np.arange(stats.sizes['draw']))
+    else:
+        warmup_draws = None
+        stats = sample_stats
+
+    metric_order = [('lp', 'Log-Prob'), ('energy', 'Energy')]
+    metrics = [(k, v) for k, v in metric_order if k in stats.data_vars]
+    if not metrics:
+        return None
+
+    dfs = []
+    for m, label in metrics:
+        da = stats[m]
+        sub_df = da.to_dataframe(name='value').reset_index()
+        sub_df['metric'] = label
+        dfs.append(sub_df)
+    df = pd.concat(dfs, ignore_index=True)
+
+    width = properties.get('width', 400)
+    height = properties.get('height', width // 4)
+    y_enc = alt.Y('value:Q', title='value', scale=alt.Scale(zero=False)) if not y_zero else alt.Y('value:Q', title='value')
+
+    if warmup_draws is not None:
+        charts = []
+        for m, label in metrics:
+            sub_df = df[df['metric'] == label]
+            base = alt.Chart(sub_df).mark_line().encode(
+                x=alt.X('draw:Q', title='draw'),
+                y=y_enc,
+                color=alt.Color('chain:N', legend=alt.Legend(orient='top', direction='horizontal')),
+            ).properties(width=width, height=height, title=label)
+            rule = alt.Chart(pd.DataFrame({'x': [warmup_draws]})).mark_rule(strokeDash=[2, 2], color='#888').encode(x='x:Q')
+            charts.append(base + rule)
+        return alt.vconcat(*charts).resolve_scale(y='independent')
+    else:
+        base = alt.Chart(df).mark_line().encode(
+            x=alt.X('draw:Q', title='draw'),
+            y=y_enc,
+            color=alt.Color('chain:N', legend=alt.Legend(orient='top', direction='horizontal')),
+        ).properties(width=width, height=height)
+        labels = [label for _, label in metrics]
+        return base.facet(facet=alt.Facet('metric:N', title=None, sort=labels), columns=1).resolve_scale(y='independent')
+
 # %% ../nbs/00_plots.ipynb 8
 def run_btracer():
     import subprocess, sys, os
-    filename = os.path.join(os.path.dirname(__file__),'btracer.py')
+    filename = os.path.join(os.path.dirname(__file__),'btracer_app.py')
     subprocess.run(['streamlit', 'run', filename]+sys.argv[1:])
