@@ -453,8 +453,8 @@ def plot_sampling(idata, properties={}, discard_warmup=False, y_zero=True, **kwa
         warmup_draws = None
         stats = sample_stats
 
-    metric_order = [('lp', 'Log-Prob'), ('energy', 'Energy')]
-    metrics = [(k, v) for k, v in metric_order if k in stats.data_vars]
+    metric_order = [(['lp', 'logp'], 'Log-Prob'), (['energy'], 'Energy'), (['step_size'], 'Step size')]
+    metrics = [(next(k for k in keys if k in stats.data_vars), label) for keys, label in metric_order if any(k in stats.data_vars for k in keys)]
     if not metrics:
         return None
 
